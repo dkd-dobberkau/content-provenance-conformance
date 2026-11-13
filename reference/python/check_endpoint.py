@@ -169,11 +169,11 @@ def links(header: str, base: str) -> dict[str, str]:
     return links
 
 
-def http_fetch(insecure: bool = False) -> Fetch:
+def http_fetch(insecure: bool = False, user_agent: str = "cps-check-endpoint/0.4") -> Fetch:
     context = ssl._create_unverified_context() if insecure else None
 
     def fetch(url: str) -> Response:
-        request = urllib.request.Request(url, headers={"User-Agent": "cps-check-endpoint/0.4", "Accept": "application/json"})
+        request = urllib.request.Request(url, headers={"User-Agent": user_agent, "Accept": "application/json"})
         try:
             with urllib.request.urlopen(request, context=context, timeout=30) as response:
                 return Response(response.status, {k.lower(): v for k, v in response.headers.items()}, response.read().decode("utf-8"))

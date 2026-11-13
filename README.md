@@ -109,6 +109,23 @@ Run all three tools to test an implementation: `check_endpoint.py` for the
 shape of the endpoint, `verify_site.py` for the signatures and
 `check_facts.py` for the Facts.
 
+## Comparing Facts with Wikidata
+
+`check_wikidata.py` is an editorial aid, not part of conformance. For every
+Fact a site lists, it resolves the subject (a Wikidata entity URI or a
+Wikipedia article URL) to a Wikidata item, maps the predicate to Wikidata
+properties (for example `foundingDate` to P571, `parent` to P22/P25) and
+compares the object: dates at the precision Wikidata gives, items by their
+Q-ID. Each Fact is reported as `confirmed`, `contradicted` or `unknown`.
+
+```bash
+uv run python check_wikidata.py https://example.org/
+```
+
+It exits with 1 if a Fact is contradicted. Wikidata is a source, not an
+arbiter: a contradiction is a reason to check both. Because Wikidata changes,
+keep this check out of CI.
+
 ## Running the reference tests
 
 ```bash
