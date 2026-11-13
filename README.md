@@ -9,7 +9,8 @@ Test material for implementations of the
 | --- | --- |
 | `vectors/canonicalization/` | Test vectors for Annex A: canonical text, content hash, canonical Record and Ed25519 signature |
 | `vectors/keys/test-key.json` | The Ed25519 test key from RFC 8032, section 7.1, TEST 1. Public; never use it for real content |
-| `reference/python/` | Reference implementation of Annex A, written for clarity rather than speed |
+| `schemas/audit-endpoint.schema.json` | JSON Schema (2020-12) of the Audit Endpoint listing, its Document entries and the key resources (Section 3.4) |
+| `reference/python/` | Reference implementation of Annex A, written for clarity rather than speed, and the site checks below |
 
 Each vector directory contains:
 
@@ -35,6 +36,29 @@ uv run python verify_site.py https://project.ddev.site/ --insecure   # local cer
 It prints one line per document (`valid`, `invalid` with a reason, or
 `unsigned`) and exits with 1 if any signed document fails.
 
+## Checking an Audit Endpoint
+
+`check_endpoint.py` checks the Audit Endpoint itself against Section 3.4:
+
+```bash
+cd reference/python
+uv run python check_endpoint.py https://example.org/
+```
+
+It validates every listing page, the key list and each key resource against
+`schemas/audit-endpoint.schema.json`, follows the `Link` headers and checks
+what a schema cannot express: page numbers, `totalItems` against the listed
+documents, duplicate identifiers, `Access-Control-Allow-Origin: *`, private key
+members in a JWK and that every `keyId` used in a signature is published.
+It prints one line per finding and exits with 1 if there is any.
+
+The schema can be used on its own with any JSON Schema validator. The listing
+is the root schema; key list and key entry are `#/$defs/keyList` and
+`#/$defs/keyEntry`.
+
+Run both tools to test an implementation: `check_endpoint.py` for the shape of
+the endpoint, `verify_site.py` for the signatures.
+
 ## Running the reference tests
 
 ```bash
@@ -53,7 +77,6 @@ After changing a vector input, regenerate the stored results with
 
 ## Planned
 
-- Schema checks for the Audit Endpoint listing itself
 - Fact addressing vectors (Layer 3)
 
 ## License

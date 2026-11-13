@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Content Provenance Audit Endpoint",
+  "description": "Representation of the Audit Endpoint resources, Section 3.4 of the Content Provenance Specification, Draft 0.4. The root schema is the listing; key resources are in $defs.",
+  "$ref": "#/$defs/listing",
+  "$defs": {
+    "absoluteUrl": {
+      "type": "string",
+      "pattern": "^https?://[^/?#\\s]+([/?#][^\\s]*)?$"
+    },
+    "dateTime": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "level": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4
+    },
+    "listing": {
+      "type": "object",
+      "required": ["@context", "specVersion", "generator", "cpsConformance", "site", "totalItems", "page", "pageSize", "documents"],
+      "properties": {
+        "@context": {
+          "type": "array",
+          "prefixItems": [
+            { "const": "https://schema.org" },
+            { "const": "https://cms-provenance.org/ns/v1" }
+          ],
+          "minItems": 2
+        },
+        "specVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+        "generator": { "type": "string", "minLength": 1 },
+        "cpsConformance": { "$ref": "#/$defs/level" },
+        "site": {
+          "type": "object",
+          "required": ["url"],
+          "properties": {
+            "url": { "$ref": "#/$defs/absoluteUrl" },
+            "keys": { "$ref": "#/$defs/absoluteUrl" }
+          }
+        },
+        "totalItems": { "type": "integer", "minimum": 0 },
+        "page": { "type": "integer", "minimum": 1 },
+        "pageSize": { "type": "integer", "minimum": 1 },
+        "documents": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/documentEntry" }
+        }
+      },
+      "if": {
+        "properties": { "cpsConformance": { "minimum": 3 } }
+      },
+      "then": {
+        "properties": { "site": { "required": ["url", "keys"] } }
+      }
+    },
+    "documentEntry": {
+      "type": "object",
+      "required": ["url", "@id", "datePublished", "lastSubstantiveRevision", "cpsConformance"],
+      "properties": {
+        "url": { "$ref": "#/$defs/absoluteUrl" },
+        "@id": { "type": "string", "minLength": 1 },
+        "datePublished": { "$ref": "#/$defs/dateTime" },
+        "lastSubstantiveRevision": { "$ref": "#/$defs/dateTime" },
+        "maintainedDate": { "$ref": "#/$defs/dateTime" },
+        "cpsConformance": { "$ref": "#/$defs/level" },
+        "contentHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "signature": {
+          "type": "object",
+          "required": ["algorithm", "keyId", "signatureValue"],
+          "properties": {
+            "algorithm": { "enum": ["Ed25519", "RSA-PSS-SHA256"] },
+            "keyId": { "type": "string", "minLength": 1 },
+            "signatureValue": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$" }
+          }
+        }
+      },
+      "dependentRequired": {
+        "contentHash": ["signature"],
+        "signature": ["contentHash"]
+      }
+    },
+    "keyList": {
+      "type": "object",
+      "required": ["keys"],
+      "properties": {
+        "keys": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/keyEntry" }
+        }
+      }
+    },
+    "keyEntry": {
+      "type": "object",
+      "required": ["keyId", "algorithm", "publicKeyJwk", "createdAt", "retiredAt"],
+      "properties": {
+        "keyId": { "type": "string", "minLength": 1 },
+        "algorithm": { "enum": ["Ed25519", "RSA-PSS-SHA256"] },
+        "publicKeyJwk": {
+          "type": "object",
+          "required": ["kty"],
+          "properties": {
+            "kty": { "enum": ["OKP", "RSA"] }
+          },
+          "not": {
+            "anyOf": [
+              { "required": ["d"] },
+              { "required": ["p"] },
+              { "required": ["q"] },
+              { "required": ["dp"] },
+              { "required": ["dq"] },
+              { "required": ["qi"] }
+            ]
+          },
+          "if": { "properties": { "kty": { "const": "OKP" } } },
+          "then": {
+            "required": ["kty", "crv", "x"],
+            "properties": {
+              "crv": { "const": "Ed25519" },
+              "x": { "type": "string", "pattern": "^[A-Za-z0-9_-]{43}$" }
+            }
+          }
+        },
+        "createdAt": { "$ref": "#/$defs/dateTime" },
+        "retiredAt": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/dateTime" }
+          ]
+        }
+      }
+    }
+  }
+}
