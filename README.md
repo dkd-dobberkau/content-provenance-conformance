@@ -125,12 +125,6 @@ changed record fails verification.
 After changing a vector input, regenerate the stored results with
 `uv run python vectors.py` and review the diff.
 
-## Planned
-
-- Complete Records (Section 3.1) in the canonicalisation vectors: their
-  Records have no author and claim L3, which Draft 0.4 no longer allows. They
-  test Annex A only.
-
 ## License
 
 MIT. See [LICENSE](LICENSE).
