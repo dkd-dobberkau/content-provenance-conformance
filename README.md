@@ -126,6 +126,27 @@ It exits with 1 if a Fact is contradicted. Wikidata is a source, not an
 arbiter: a contradiction is a reason to check both. Because Wikidata changes,
 keep this check out of CI.
 
+## Checking MX meta tags
+
+`check_mx.py` is a bridge check to MX (Machine Experience, the vocabulary
+drafted for The Gathering, see Section 5 of the specification), not part of
+CPS conformance. For every Document the Audit Endpoint lists, it reports the
+MX level the page head reaches and checks that MX and CPS agree:
+
+- MX Level 1: `title`, `description`, `author`, `mx:created`, `mx:modified`
+  (MX Core Metadata note §8);
+- MX Level 2: plus `mx:canonicalUri`, `mx:summary`, `mx:conformsTo` and
+  `mx:trainingDataPolicy` (MX Carrier Formats note §3.2.2).
+
+```bash
+uv run python check_mx.py https://example.org/
+```
+
+Missing fields only lower the level. It exits with 1 on a contradiction:
+`<link rel="canonical">` and `mx:canonicalUri` disagree, `mx:canonicalUri`
+is not the URL the Audit Endpoint lists, or `author`, `mx:created`,
+`mx:modified` or `mx:maintainedDate` disagree with the Record.
+
 ## Running the reference tests
 
 ```bash
