@@ -21,6 +21,20 @@ Each vector directory contains:
 An implementation conforms to Annex A if it reproduces every
 `expected-text.txt` and every value in `expected.json`.
 
+## Verifying a live site
+
+`verify_site.py` walks a site's Audit Endpoint, fetches every signed document
+and checks hash and signature as required by Annex A.5.2:
+
+```bash
+cd reference/python
+uv run python verify_site.py https://example.org/
+uv run python verify_site.py https://project.ddev.site/ --insecure   # local certificates
+```
+
+It prints one line per document (`valid`, `invalid` with a reason, or
+`unsigned`) and exits with 1 if any signed document fails.
+
 ## Running the reference tests
 
 ```bash
@@ -39,8 +53,7 @@ After changing a vector input, regenerate the stored results with
 
 ## Planned
 
-- Audit Endpoint checks (Layer 4) that fetch `/.well-known/content-provenance`
-  from a live site
+- Schema checks for the Audit Endpoint listing itself
 - Fact addressing vectors (Layer 3)
 
 ## License
