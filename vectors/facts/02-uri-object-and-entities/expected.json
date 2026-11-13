@@ -1,0 +1,50 @@
+{
+  "documentUrl": "https://example.org/museums/louvre",
+  "anchors": {
+    "fact-louvre-city": "Paris",
+    "fact-louvre-collections": "émigrés & the Church"
+  },
+  "annotations": {
+    "louvre-collections": {
+      "@context": ["http://www.w3.org/ns/anno.jsonld", "https://cms-provenance.org/ns/v1"],
+      "id": "https://example.org/.well-known/content-provenance/facts/louvre-collections",
+      "type": "Annotation",
+      "motivation": "describing",
+      "body": {
+        "id": "https://example.org/museums/louvre#fact-louvre-collections",
+        "subject": "https://en.wikipedia.org/wiki/Louvre",
+        "predicate": "https://schema.org/description",
+        "object": "Works confiscated from émigrés and the Church",
+        "confidence": "asserted"
+      },
+      "target": {
+        "source": "https://example.org/museums/louvre",
+        "selector": [
+          {"type": "FragmentSelector", "conformsTo": "http://tools.ietf.org/rfc/rfc3986", "value": "fact-louvre-collections"},
+          {"type": "TextQuoteSelector", "exact": "émigrés & the Church"}
+        ]
+      }
+    },
+    "louvre-city": {
+      "@context": ["http://www.w3.org/ns/anno.jsonld", "https://cms-provenance.org/ns/v1"],
+      "id": "https://example.org/.well-known/content-provenance/facts/louvre-city",
+      "type": "Annotation",
+      "motivation": "describing",
+      "body": {
+        "id": "https://example.org/museums/louvre#fact-louvre-city",
+        "subject": "https://en.wikipedia.org/wiki/Louvre",
+        "predicate": "https://schema.org/containedInPlace",
+        "object": {"@id": "https://en.wikipedia.org/wiki/Paris"},
+        "evidence": "https://en.wikipedia.org/wiki/Louvre",
+        "confidence": "asserted"
+      },
+      "target": {
+        "source": "https://example.org/museums/louvre",
+        "selector": [
+          {"type": "FragmentSelector", "conformsTo": "http://tools.ietf.org/rfc/rfc3986", "value": "fact-louvre-city"},
+          {"type": "TextQuoteSelector", "exact": "Paris"}
+        ]
+      }
+    }
+  }
+}

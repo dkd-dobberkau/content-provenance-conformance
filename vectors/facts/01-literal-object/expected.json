@@ -1,0 +1,31 @@
+{
+  "documentUrl": "https://example.org/report",
+  "anchors": {
+    "fact-revenue-2025": "12.4 million EUR"
+  },
+  "annotations": {
+    "revenue-2025": {
+      "@context": ["http://www.w3.org/ns/anno.jsonld", "https://cms-provenance.org/ns/v1"],
+      "id": "https://example.org/.well-known/content-provenance/facts/revenue-2025",
+      "type": "Annotation",
+      "motivation": "describing",
+      "body": {
+        "id": "https://example.org/report#fact-revenue-2025",
+        "subject": "https://example.org/company",
+        "predicate": "https://schema.org/revenue",
+        "object": "12400000",
+        "evidence": "https://example.org/annual-report.pdf",
+        "confidence": "measured",
+        "validFrom": "2025-01-01",
+        "validUntil": "2025-12-31"
+      },
+      "target": {
+        "source": "https://example.org/report",
+        "selector": [
+          {"type": "FragmentSelector", "conformsTo": "http://tools.ietf.org/rfc/rfc3986", "value": "fact-revenue-2025"},
+          {"type": "TextQuoteSelector", "exact": "12.4 million EUR"}
+        ]
+      }
+    }
+  }
+}

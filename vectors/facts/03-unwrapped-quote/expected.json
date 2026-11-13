@@ -1,0 +1,26 @@
+{
+  "documentUrl": "https://example.org/worm",
+  "anchors": {},
+  "annotations": {
+    "wormianum": {
+      "@context": ["http://www.w3.org/ns/anno.jsonld", "https://cms-provenance.org/ns/v1"],
+      "id": "https://example.org/.well-known/content-provenance/facts/wormianum",
+      "type": "Annotation",
+      "motivation": "describing",
+      "body": {
+        "id": "https://example.org/worm#fact-wormianum",
+        "subject": "https://en.wikipedia.org/wiki/Museum_Wormianum",
+        "predicate": "https://schema.org/datePublished",
+        "object": "1655",
+        "evidence": "https://en.wikipedia.org/wiki/Museum_Wormianum"
+      },
+      "target": {
+        "source": "https://example.org/worm",
+        "selector": [
+          {"type": "FragmentSelector", "conformsTo": "http://tools.ietf.org/rfc/rfc3986", "value": "fact-wormianum"},
+          {"type": "TextQuoteSelector", "exact": "published in 1655"}
+        ]
+      }
+    }
+  }
+}

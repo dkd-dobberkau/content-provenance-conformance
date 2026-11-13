@@ -121,13 +121,13 @@ def _read_pages(checker: _Checker, url: str) -> list[tuple[str, dict]]:
         listing, response = checker.read(url, "listing")
         if listing is None:
             return pages
-        links = _links(response.headers.get("link", ""), url)
+        page_links = links(response.headers.get("link", ""), url)
         if listing.get("page") != len(pages) + 1:
             checker.report(url, f"page is {listing.get('page')!r}, expected {len(pages) + 1}")
-        if pages and "prev" not in links:
+        if pages and "prev" not in page_links:
             checker.report(url, 'has no Link with rel="prev"')
         pages.append((url, listing))
-        url = links.get("next")
+        url = page_links.get("next")
     if url in seen:
         checker.report(url, 'rel="next" leads back to a page already read')
     return pages
@@ -159,7 +159,7 @@ def _check_keys(checker: _Checker, keys_url: str) -> set[str]:
     return published
 
 
-def _links(header: str, base: str) -> dict[str, str]:
+def links(header: str, base: str) -> dict[str, str]:
     """Maps each rel of an RFC 8288 Link header to its target, resolved against the page URL."""
     links = {}
     for target, parameters in re.findall(r"<([^>]*)>\s*((?:;[^,]*)*)", header):
