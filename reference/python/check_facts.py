@@ -26,23 +26,32 @@ def check_facts(base_url: str, fetch: Fetch) -> tuple[list[Finding], int]:
     """Findings, and the number of Facts checked."""
     findings: list[Finding] = []
     checked = 0
-    for document_url in _document_urls(base_url.rstrip("/") + AUDIT_PATH, fetch):
+    for document_url in document_urls(base_url.rstrip("/") + AUDIT_PATH, fetch):
         response = fetch(document_url)
         if response.status != 200:
             findings.append(Finding(document_url, f"answered with status {response.status}, expected 200"))
             continue
-        record = cps_canonical.find_record(response.body) or {}
-        claims = record.get("claim", [])
-        for claim in claims if isinstance(claims, list) else [claims]:
-            checked += 1
-            label = claim.get("@id", document_url) if isinstance(claim, dict) else document_url
-            if not isinstance(claim, dict):
-                findings.append(Finding(document_url, "claim is not an object"))
-                continue
-            findings.extend(Finding(label, problem) for problem in cps_facts.claim_problems(claim, response.body, document_url))
-            if cps_facts.fact_id(claim, document_url) is not None:
-                findings.extend(_check_annotation(claim, document_url, fetch))
+        document_findings, document_checked = check_document_facts(document_url, response.body, fetch)
+        findings.extend(document_findings)
+        checked += document_checked
     return findings, checked
+
+
+def check_document_facts(document_url: str, html: str, fetch: Fetch) -> tuple[list[Finding], int]:
+    """Findings for the Facts in the Record of one Document, and the number of Facts checked."""
+    record = cps_canonical.find_record(html) or {}
+    claims = record.get("claim", [])
+    findings: list[Finding] = []
+    claims = claims if isinstance(claims, list) else [claims]
+    for claim in claims:
+        if not isinstance(claim, dict):
+            findings.append(Finding(document_url, "claim is not an object"))
+            continue
+        label = claim.get("@id", document_url)
+        findings.extend(Finding(label, problem) for problem in cps_facts.claim_problems(claim, html, document_url))
+        if cps_facts.fact_id(claim, document_url) is not None:
+            findings.extend(_check_annotation(claim, document_url, fetch))
+    return findings, len(claims)
 
 
 def _check_annotation(claim: dict[str, Any], document_url: str, fetch: Fetch) -> list[Finding]:
@@ -81,7 +90,8 @@ def _differences(served: Any, expected: Any, path: str) -> list[str]:
     return [] if served == expected else [f"{path}: {served!r}, expected {expected!r}"]
 
 
-def _document_urls(listing_url: str, fetch: Fetch) -> list[str]:
+def document_urls(listing_url: str, fetch: Fetch) -> list[str]:
+    """The Document URLs of every page of an Audit Endpoint listing."""
     urls, seen = [], set()
     while listing_url and listing_url not in seen and len(seen) < MAX_PAGES:
         seen.add(listing_url)

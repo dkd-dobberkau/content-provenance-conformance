@@ -11,7 +11,7 @@ Test material for implementations of the
 | `vectors/facts/` | Test vectors for Section 3.3: Facts in the Record, their fragment elements and the Web Annotation of each Fact |
 | `vectors/keys/test-key.json` | The Ed25519 test key from RFC 8032, section 7.1, TEST 1. Public; never use it for real content |
 | `schemas/audit-endpoint.schema.json` | JSON Schema (2020-12) of the Audit Endpoint listing, its Document entries and the key resources (Section 3.4) |
-| `reference/python/` | Reference implementation of Annex A, written for clarity rather than speed, and the site checks below |
+| `reference/python/` | Reference implementations of Annex A (`cps_canonical.py`), Section 3.1 (`cps_record.py`) and Section 3.3 (`cps_facts.py`), written for clarity rather than speed, and the site checks below |
 
 Each vector directory contains:
 
@@ -48,6 +48,30 @@ uv run python verify_site.py https://project.ddev.site/ --insecure   # local cer
 
 It prints one line per document (`valid`, `invalid` with a reason, or
 `unsigned`) and exits with 1 if any signed document fails.
+
+## Checking the conformance level of a site
+
+`check_site.py` reports the level each Document of a site reaches and compares
+it with the level the Document claims:
+
+```bash
+cd reference/python
+uv run python check_site.py https://example.org/
+```
+
+It takes the Documents from the Audit Endpoint, or from the XML sitemap when
+there is none, and checks the levels of Section 4 in turn:
+
+| Level | Checked |
+| --- | --- |
+| L1 | Listed in the XML sitemap (`/sitemap.xml` or named in `/robots.txt`), an absolute `<link rel="canonical">`, schema.org JSON-LD |
+| L2 | A complete Record (`cps_record.py`) |
+| L3 | A signature that verifies (`verify_site.py`) |
+| L4 | A conforming Audit Endpoint (`check_endpoint.py`) and conforming Facts (`check_facts.py`) |
+
+For each Document it prints the level reached and what blocks the next one.
+It exits with 1 if a Document or the Audit Endpoint claims a higher level than
+is reached. The three tools below give the details of a level.
 
 ## Checking an Audit Endpoint
 
@@ -103,7 +127,9 @@ After changing a vector input, regenerate the stored results with
 
 ## Planned
 
-- A single check that reports the conformance level a site reaches (L1 to L4)
+- Complete Records (Section 3.1) in the canonicalisation vectors: their
+  Records have no author and claim L3, which Draft 0.4 no longer allows. They
+  test Annex A only.
 
 ## License
 
