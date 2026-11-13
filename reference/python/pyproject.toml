@@ -1,0 +1,19 @@
+[project]
+name = "cps-canonical"
+version = "0.3.0"
+description = "Reference implementation of Annex A (canonicalisation and signing) of the Content Provenance Specification"
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = [
+    "cryptography>=43",
+    "html5lib>=1.1",
+]
+
+[dependency-groups]
+dev = [
+    "jcs>=0.2",
+    "pytest>=8",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
