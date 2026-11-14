@@ -1,0 +1,46 @@
+{
+  "contentHash": "sha256:79466d8a258294429198368fbc548af5b75e59b9dfdf59050ab38f91b9adb22c",
+  "canonicalRecord": "{\"@context\":[\"https://schema.org\",\"https://cms-provenance.org/ns/v1\"],\"@id\":\"urn:uuid:00000000-0000-4000-8000-000000000008\",\"@type\":\"WebPage\",\"author\":[{\"@id\":\"https://orcid.org/0000-0002-1825-0097\",\"@type\":\"Person\",\"name\":\"Josiah Carberry\"}],\"contentHash\":\"sha256:79466d8a258294429198368fbc548af5b75e59b9dfdf59050ab38f91b9adb22c\",\"cpsConformance\":3,\"datePublished\":\"2026-11-14T09:00:00Z\",\"generator\":\"CPS reference vectors\",\"image\":[{\"@id\":\"urn:uuid:00000000-0000-4000-8000-0000000000a8\",\"@type\":\"ImageObject\",\"contentUrl\":\"https://example.org/fileadmin/gate.jpg\",\"copyrightNotice\":\"© Ada Lovelace\",\"creator\":{\"name\":\"Ada Lovelace\"},\"digitalSourceType\":\"https://cv.iptc.org/newscodes/digitalsourcetype/digitalCapture\",\"encodingFormat\":\"image/jpeg\",\"isBasedOn\":\"https://example.org/originals/gate\",\"license\":\"https://creativecommons.org/licenses/by/4.0/\",\"sha256\":\"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08\"}],\"lastSubstantiveRevision\":\"2026-11-14T09:00:00Z\"}",
+  "canonicalRecordSha256": "4461ea92a3c0ab95af6412d7bc4b823975b7d996e710f1cab35170b7d9770b7d",
+  "signedRecord": {
+    "@context": [
+      "https://schema.org",
+      "https://cms-provenance.org/ns/v1"
+    ],
+    "@type": "WebPage",
+    "@id": "urn:uuid:00000000-0000-4000-8000-000000000008",
+    "author": [
+      {
+        "@type": "Person",
+        "@id": "https://orcid.org/0000-0002-1825-0097",
+        "name": "Josiah Carberry"
+      }
+    ],
+    "datePublished": "2026-11-14T09:00:00Z",
+    "lastSubstantiveRevision": "2026-11-14T09:00:00Z",
+    "generator": "CPS reference vectors",
+    "cpsConformance": 3,
+    "image": [
+      {
+        "@type": "ImageObject",
+        "@id": "urn:uuid:00000000-0000-4000-8000-0000000000a8",
+        "contentUrl": "https://example.org/fileadmin/gate.jpg",
+        "sha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "encodingFormat": "image/jpeg",
+        "creator": {
+          "name": "Ada Lovelace"
+        },
+        "copyrightNotice": "© Ada Lovelace",
+        "license": "https://creativecommons.org/licenses/by/4.0/",
+        "isBasedOn": "https://example.org/originals/gate",
+        "digitalSourceType": "https://cv.iptc.org/newscodes/digitalsourcetype/digitalCapture"
+      }
+    ],
+    "contentHash": "sha256:79466d8a258294429198368fbc548af5b75e59b9dfdf59050ab38f91b9adb22c",
+    "signature": {
+      "algorithm": "Ed25519",
+      "keyId": "cps-test-rfc8032-1",
+      "signatureValue": "P9pNRbv8dFqmIhtjBk-OdV9uE8jXvcBiR0L9IvpTWKF1wJS8MTHNL0xmmIVDndzPz-iYKsa-HkNTlUWCV33bDA"
+    }
+  }
+}

@@ -32,6 +32,12 @@ def test_complete_record_has_no_problems() -> None:
     assert cps_record.problems(COMPLETE) == []
 
 
+def test_media_members_do_not_affect_completeness() -> None:
+    # Section 3.1: an incomplete media entry never makes the Record incomplete.
+    record = changed(image=[{"@type": "ImageObject", "encodingFormat": "image/png"}])
+    assert cps_record.problems(record) == []
+
+
 def test_sources_may_be_omitted() -> None:
     assert cps_record.problems(without("citation")) == []
 
